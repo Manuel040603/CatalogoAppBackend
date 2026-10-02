@@ -31,6 +31,7 @@ class PedidoRepositorio {
             it[uidConsultora] = uid
             it[nombreCliente] = datos.nombreCliente
             it[telefonoCliente] = datos.telefonoCliente
+            it[direccion] = datos.direccion
             it[this.total] = total
             it[estado] = "PENDIENTE"
             it[fechaCreacion] = ahora
@@ -128,6 +129,7 @@ class PedidoRepositorio {
             uidConsultora = fila[TablaPedidos.uidConsultora],
             nombreCliente = fila[TablaPedidos.nombreCliente],
             telefonoCliente = fila[TablaPedidos.telefonoCliente],
+            direccion = fila[TablaPedidos.direccion],
             total = fila[TablaPedidos.total],
             estado = fila[TablaPedidos.estado],
             fechaCreacion = fila[TablaPedidos.fechaCreacion].format(formato),

@@ -4,7 +4,9 @@ import com.catalogoapp.backend.db.DatabaseFactory
 import com.catalogoapp.backend.firebase.FirebaseService
 import com.catalogoapp.backend.modelo.ErrorResponse
 import com.catalogoapp.backend.repositorio.PedidoRepositorio
+import com.catalogoapp.backend.repositorio.RepartoRepositorio
 import com.catalogoapp.backend.rutas.pedidoRutas
+import com.catalogoapp.backend.rutas.repartoRutas
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -44,11 +46,13 @@ fun Application.modulo() {
     }
 
     val repositorio = PedidoRepositorio()
+    val repositorioReparto = RepartoRepositorio()
 
     routing {
         get("/salud") {
             call.respond(HttpStatusCode.OK, mapOf("estado" to "ok"))
         }
         pedidoRutas(repositorio)
+        repartoRutas(repositorioReparto)
     }
 }

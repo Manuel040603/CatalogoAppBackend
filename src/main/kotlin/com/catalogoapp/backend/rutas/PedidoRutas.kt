@@ -19,7 +19,7 @@ import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 
-private suspend fun ApplicationCall.uidAutenticado(): String? {
+suspend fun ApplicationCall.uidAutenticado(): String? {
     val encabezado = request.headers["Authorization"]
     if (encabezado == null || !encabezado.startsWith("Bearer ")) {
         respond(HttpStatusCode.Unauthorized, ErrorResponse("Falta el token de autenticacion"))

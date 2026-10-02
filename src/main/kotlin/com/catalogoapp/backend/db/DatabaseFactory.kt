@@ -25,7 +25,13 @@ object DatabaseFactory {
         Database.connect(fuenteDatos)
 
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(TablaPedidos, TablaItemsPedido, TablaDispositivos)
+            SchemaUtils.createMissingTablesAndColumns(
+                TablaPedidos,
+                TablaItemsPedido,
+                TablaDispositivos,
+                TablaRepartos,
+                TablaParadasReparto
+            )
         }
     }
 }
