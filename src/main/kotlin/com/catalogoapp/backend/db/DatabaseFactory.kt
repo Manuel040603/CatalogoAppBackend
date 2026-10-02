@@ -19,6 +19,8 @@ object DatabaseFactory {
             minimumIdle = 1
             isAutoCommit = false
             transactionIsolation = "TRANSACTION_READ_COMMITTED"
+            keepaliveTime = 60000
+            maxLifetime = 1500000
             validate()
         }
         val fuenteDatos = HikariDataSource(configuracion)
