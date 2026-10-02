@@ -22,11 +22,28 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
+import org.slf4j.LoggerFactory
 
 fun main() {
-    DatabaseFactory.conectar()
-    FirebaseService.inicializar()
-    embeddedServer(Netty, port = Config.puerto, module = Application::modulo).start(wait = true)
+    val logger = LoggerFactory.getLogger("Arranque")
+    try {
+        DatabaseFactory.conectar()
+    } catch (e: Throwable) {
+        logger.error("Fallo al conectar o migrar la base de datos", e)
+        throw e
+    }
+    try {
+        FirebaseService.inicializar()
+    } catch (e: Throwable) {
+        logger.error("Fallo al inicializar Firebase", e)
+        throw e
+    }
+    try {
+        embeddedServer(Netty, port = Config.puerto, module = Application::modulo).start(wait = true)
+    } catch (e: Throwable) {
+        logger.error("Fallo al iniciar el servidor Netty", e)
+        throw e
+    }
 }
 
 fun Application.modulo() {
