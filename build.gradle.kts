@@ -7,12 +7,6 @@ plugins {
 
 group = "com.catalogoapp.backend"
 version = "1.0.0"
-
-repositories {
-    mavenCentral()
-    google()
-}
-
 val ktorVersion = "3.6.0"
 val exposedVersion = "1.5.0"
 
