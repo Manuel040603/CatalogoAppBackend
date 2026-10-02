@@ -18,6 +18,8 @@ import io.ktor.server.plugins.calllogging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.httpMethod
+import io.ktor.server.request.path
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
@@ -56,8 +58,10 @@ fun Application.modulo() {
         allowHeader("Authorization")
         allowHeader("Content-Type")
     }
+    val loggerSolicitudes = LoggerFactory.getLogger("Solicitudes")
     install(StatusPages) {
         exception<Throwable> { call, causa ->
+            loggerSolicitudes.error("Error no controlado procesando ${call.request.httpMethod.value} ${call.request.path()}", causa)
             call.respond(HttpStatusCode.InternalServerError, ErrorResponse(causa.message ?: "Error interno"))
         }
     }
