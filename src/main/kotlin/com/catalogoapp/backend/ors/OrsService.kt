@@ -75,7 +75,7 @@ object OrsService {
 
     suspend fun geocodificar(direccion: String): CoordenadaGeografica? {
         val textoCodificado = URLEncoder.encode(direccion, "UTF-8")
-        val urlCompleta = "$GEOCODE_URL?api_key=${Config.orsApiKey}&text=$textoCodificado&size=1"
+        val urlCompleta = "$GEOCODE_URL?api_key=${Config.orsApiKey}&text=$textoCodificado&size=1&boundary.country=PER"
         val respuesta: GeocodeResponse = cliente.get(urlCompleta).body()
         val coordenadas = respuesta.features.firstOrNull()?.geometry?.coordinates ?: return null
         if (coordenadas.size < 2) return null
