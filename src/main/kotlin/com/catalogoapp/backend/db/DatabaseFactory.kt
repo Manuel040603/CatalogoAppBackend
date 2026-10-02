@@ -11,7 +11,8 @@ object DatabaseFactory {
 
     fun conectar() {
         val configuracion = HikariConfig().apply {
-            jdbcUrl = Config.databaseUrl
+            val separadorParametro = if (Config.databaseUrl.contains("?")) "&" else "?"
+            jdbcUrl = "${Config.databaseUrl}${separadorParametro}prepareThreshold=0"
             username = Config.databaseUser
             password = Config.databasePassword
             driverClassName = "org.postgresql.Driver"
