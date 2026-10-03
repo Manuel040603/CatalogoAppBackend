@@ -66,6 +66,9 @@ object OrsService {
 
     private const val GEOCODE_URL = "https://api.heigit.org/pelias/v1/search"
     private const val OPTIMIZATION_URL = "https://api.heigit.org/vroom/v0"
+    private const val LATITUD_LIMA = -12.0464
+    private const val LONGITUD_LIMA = -77.0428
+    private const val RADIO_BUSQUEDA_KM = 60
 
     private val cliente = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -75,7 +78,10 @@ object OrsService {
 
     suspend fun geocodificar(direccion: String): CoordenadaGeografica? {
         val textoCodificado = URLEncoder.encode(direccion, "UTF-8")
-        val urlCompleta = "$GEOCODE_URL?api_key=${Config.orsApiKey}&text=$textoCodificado&size=1&boundary.country=PER"
+        val urlCompleta = "$GEOCODE_URL?api_key=${Config.orsApiKey}&text=$textoCodificado&size=1" +
+            "&boundary.country=PER" +
+            "&boundary.circle.lat=$LATITUD_LIMA&boundary.circle.lon=$LONGITUD_LIMA&boundary.circle.radius=$RADIO_BUSQUEDA_KM" +
+            "&focus.point.lat=$LATITUD_LIMA&focus.point.lon=$LONGITUD_LIMA"
         val respuesta: GeocodeResponse = cliente.get(urlCompleta).body()
         val coordenadas = respuesta.features.firstOrNull()?.geometry?.coordinates ?: return null
         if (coordenadas.size < 2) return null
