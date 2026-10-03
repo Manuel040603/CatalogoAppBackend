@@ -131,7 +131,12 @@ class RepartoRepositorio {
             it[entregada] = true
         }
         if (filasActualizadas == 0) return@transaction null
-        obtenerParadas(idReparto).firstOrNull { it.id == idParada }
+        val parada = obtenerParadas(idReparto).firstOrNull { it.id == idParada } ?: return@transaction null
+        TablaPedidos.update({ TablaPedidos.id eq parada.pedidoId }) {
+            it[estado] = "ENTREGADO"
+            it[fechaActualizacion] = LocalDateTime.now()
+        }
+        parada
     }
 
     fun obtenerTokenDispositivoDePedido(idPedido: Int): String? = transaction {
