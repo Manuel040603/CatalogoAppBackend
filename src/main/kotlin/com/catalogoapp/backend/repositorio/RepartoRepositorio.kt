@@ -154,10 +154,16 @@ class RepartoRepositorio {
             it[entregada] = true
         }
         if (filasActualizadas == 0) return@transaction null
-        val parada = obtenerParadas(idReparto).firstOrNull { it.id == idParada } ?: return@transaction null
+        val paradas = obtenerParadas(idReparto)
+        val parada = paradas.firstOrNull { it.id == idParada } ?: return@transaction null
         TablaPedidos.update({ TablaPedidos.id eq parada.pedidoId }) {
             it[estado] = "ENTREGADO"
             it[fechaActualizacion] = LocalDateTime.now()
+        }
+        if (paradas.all { it.entregada }) {
+            TablaRepartos.update({ TablaRepartos.id eq idReparto }) {
+                it[estado] = "COMPLETADO"
+            }
         }
         parada
     }
