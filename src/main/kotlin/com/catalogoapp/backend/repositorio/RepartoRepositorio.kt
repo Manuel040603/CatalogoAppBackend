@@ -6,6 +6,7 @@ import com.catalogoapp.backend.db.TablaPedidos
 import com.catalogoapp.backend.db.TablaRepartos
 import com.catalogoapp.backend.modelo.ParadaRepartoDto
 import com.catalogoapp.backend.modelo.RepartoResponse
+import com.catalogoapp.backend.modelo.ResumenRepartoDto
 import com.catalogoapp.backend.ors.CoordenadaGeografica
 import com.catalogoapp.backend.ors.OrsService
 import org.jetbrains.exposed.v1.core.ResultRow
@@ -18,6 +19,7 @@ import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 private data class PedidoParaReparto(
     val id: Int,
@@ -27,6 +29,27 @@ private data class PedidoParaReparto(
 )
 
 class RepartoRepositorio {
+
+    private val formato = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+
+    fun obtenerTodos(): List<ResumenRepartoDto> = transaction {
+        TablaRepartos.selectAll()
+            .orderBy(TablaRepartos.fechaCreacion to SortOrder.DESC)
+            .map { fila ->
+                val idReparto = fila[TablaRepartos.id].value
+                val paradas = obtenerParadas(idReparto)
+                ResumenRepartoDto(
+                    id = idReparto,
+                    zona = fila[TablaRepartos.zona],
+                    chofer = fila[TablaRepartos.chofer],
+                    vehiculo = fila[TablaRepartos.vehiculo],
+                    estado = fila[TablaRepartos.estado],
+                    fechaCreacion = fila[TablaRepartos.fechaCreacion].format(formato),
+                    totalParadas = paradas.size,
+                    paradasEntregadas = paradas.count { it.entregada }
+                )
+            }
+    }
 
     suspend fun crear(
         zona: String,
