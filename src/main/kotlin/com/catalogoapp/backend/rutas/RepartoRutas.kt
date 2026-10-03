@@ -33,6 +33,12 @@ fun Route.repartoRutas(repositorio: RepartoRepositorio) {
             call.respond(HttpStatusCode.Created, reparto)
         }
 
+        get {
+            val uid = call.uidAutenticado() ?: return@get
+            val repartos = repositorio.obtenerTodos()
+            call.respond(HttpStatusCode.OK, repartos)
+        }
+
         get("/{id}") {
             val uid = call.uidAutenticado() ?: return@get
             val id = call.parameters["id"]?.toIntOrNull()
