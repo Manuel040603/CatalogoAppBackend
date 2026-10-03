@@ -84,3 +84,15 @@ data class ActualizarUbicacionRequest(
     val latitud: Double,
     val longitud: Double
 )
+
+@Serializable
+data class ResumenRepartoDto(
+    val id: Int,
+    val zona: String,
+    val chofer: String,
+    val vehiculo: String,
+    val estado: String,
+    val fechaCreacion: String,
+    val totalParadas: Int,
+    val paradasEntregadas: Int
+)
